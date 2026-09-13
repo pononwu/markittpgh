@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Profile — Markitt PH</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Leaflet map -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <!-- Template stylesheets — active one applied by JS -->
+  <link rel="stylesheet" href="css/template-a.css" id="templateStylesheet" />
+  <style>
+    /* Rating summary */
+    .rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .rating-big { font-size: 3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .rating-detail { flex: 1; }
+    .rating-detail .stars { font-size: 20px; }
+    .rating-detail p { font-size: 13px; color: var(--grey-dk); margin-top: 4px; }
+
+    /* Loading overlay */
+    #loadingOverlay {
+      position: fixed; inset: 0;
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9998;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .loader {
+      width: 40px; height: 40px;
+      border: 4px solid var(--grey-md);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Review modal overrides */
+    .star-input label { font-size: 32px; }
+  </style>
+</head>
+<body>
+
+  <!-- Loading overlay -->
+  <div id="loadingOverlay">
+    <div class="loader"></div>
+    <p style="color:var(--grey-dk);font-size:14px;">Loading profile...</p>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Markitt<span>PH</span></a>
+      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+      <ul class="navbar-links" id="navLinks">
+        <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="register.html"><i class="fa fa-plus-circle"></i> List Your Biz</a></li>
+        <li><a href="admin.html"><i class="fa fa-shield-alt"></i> Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Profile Hero (populated by JS) ────────────────────── -->
+  <div class="profile-hero" id="profileHero">
+    <div class="biz-avatar" id="heroAvatar">🏪</div>
+    <h1 id="heroName">Loading...</h1>
+    <div class="hero-underline"></div>
+    <div id="heroBadge"></div>
+    <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="shareProfile()">
+        <i class="fa fa-share-alt"></i> Share Your Biz
+      </button>
+      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.5);" onclick="openReviewModal()">
+        <i class="fa fa-star"></i> Drop a Review
+      </button>
+      <a id="dashLink" href="#" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.5);">
+        <i class="fa fa-cog"></i> Manage
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Tab Bar ────────────────────────────────────────────── -->
+  <div class="profile-tabs">
+    <div class="container">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('about', this)">
+          <i class="fa fa-info-circle"></i> About
+        </button>
+        <button class="tab-btn" onclick="switchTab('products', this)">
+          <i class="fa fa-box-open"></i> Products &amp; Services
+        </button>
+        <button class="tab-btn" onclick="switchTab('reviews', this)">
+          <i class="fa fa-star"></i> Reviews <span id="reviewTabCount"></span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('location', this)">
+          <i class="fa fa-map-marker-alt"></i> Location
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab Content ─────────────────────────────────────────── -->
+  <div class="profile-content">
+
+    <!-- About Tab -->
+    <div class="tab-panel active" id="tab-about">
+      <h3 class="profile-section-title"><i class="fa fa-info-circle" style="color:var(--orange)"></i> About This Business</h3>
+      <div class="about-box">
+        <p id="aboutDesc">—</p>
+      </div>
+      <ul class="info-list" id="infoList"></ul>
+    </div>
+
+    <!-- Products Tab -->
+    <div class="tab-panel" id="tab-products">
+      <h3 class="profile-section-title"><i class="fa fa-box-open" style="color:var(--orange)"></i> Products &amp; Services</h3>
+      <div class="product-grid" id="productGrid"></div>
+      <div class="empty-state hidden" id="noProducts">
+        <div class="empty-icon">📦</div>
+        <h3>No products listed yet</h3>
+        <p>The owner hasn't added any products or services yet.</p>
+      </div>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div class="tab-panel" id="tab-reviews">
+      <div class="rating-summary" id="ratingSummary">
+        <div class="rating-big" id="avgRating">—</div>
+        <div class="rating-detail">
+          <div class="stars" id="avgStars"></div>
+          <p id="reviewCountText">No reviews yet</p>
+        </div>
+        <button class="btn btn-primary" onclick="openReviewModal()">
+          <i class="fa fa-star"></i> Drop a Review
+        </button>
+      </div>
+      <div id="reviewsList"></div>
+      <div class="empty-state hidden" id="noReviews">
+        <div class="empty-icon">⭐</div>
+        <h3>No review yet — be the first!</h3>
+        <p>Share your experience with this business.</p>
+        <button class="btn btn-primary" onclick="openReviewModal()">Drop a Review</button>
+      </div>
+    </div>
+
+    <!-- Location Tab -->
+    <div class="tab-panel" id="tab-location">
+      <h3 class="profile-section-title"><i class="fa fa-map-marker-alt" style="color:var(--orange)"></i> Find Us</h3>
+      <p id="locationAddress" style="font-size:14px;color:var(--grey-dk);margin-bottom:12px;"></p>
+      <div id="map"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Review Modal ────────────────────────────────────────── -->
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3><i class="fa fa-star" style="color:var(--orange)"></i> Drop a Review</h3>
+        <button class="modal-close" onclick="closeReviewModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="reviewAlert"></div>
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input type="text" class="form-control" id="reviewerName" placeholder="e.g. Chidi O." maxlength="50" />
+          <div class="form-error" id="errReviewerName">Please enter your name.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Star Rating *</label>
+          <div class="star-input" id="starInput">
+            <input type="radio" name="rating" id="s5" value="5" /><label for="s5" title="5 stars">★</label>
+            <input type="radio" name="rating" id="s4" value="4" /><label for="s4" title="4 stars">★</label>
+            <input type="radio" name="rating" id="s3" value="3" /><label for="s3" title="3 stars">★</label>
+            <input type="radio" name="rating" id="s2" value="2" /><label for="s2" title="2 stars">★</label>
+            <input type="radio" name="rating" id="s1" value="1" /><label for="s1" title="1 star">★</label>
+          </div>
+          <div class="form-error" id="errRating">Please select a star rating.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Review (optional)</label>
+          <textarea class="form-control" id="reviewText" rows="3" placeholder="Tell others about your experience..." maxlength="400"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeReviewModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitReview()">
+          <i class="fa fa-paper-plane"></i> Submit Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2025 Markitt PH · <a href="index.html">Browse All Businesses</a></p>
+  </footer>
+  <div id="toast"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/reviews.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/profile-view.js"></script>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

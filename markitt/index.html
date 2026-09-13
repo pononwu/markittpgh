@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markitt PH — Make Your Business Shine for PH</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1A3C6E 0%, #2A5298 60%, #0D2347 100%);
+      color: #fff;
+      padding: 72px 20px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23E87722' fill-opacity='0.06'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-content { position: relative; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+    .hero h1 span { color: var(--orange); }
+    .hero p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: rgba(255,255,255,0.82);
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Search Bar ────────────────────────────────────────── */
+    .search-bar-wrap {
+      max-width: 680px;
+      margin: 32px auto 0;
+      position: relative;
+    }
+    .search-bar-wrap input {
+      width: 100%;
+      padding: 16px 60px 16px 52px;
+      border: none;
+      border-radius: 50px;
+      font-size: 15px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      font-family: 'Inter', sans-serif;
+    }
+    .search-bar-wrap input:focus { outline: 3px solid var(--orange); }
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--grey-dk);
+      font-size: 17px;
+    }
+    .search-clear {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--grey-dk);
+      cursor: pointer;
+      font-size: 16px;
+      background: none;
+      border: none;
+      display: none;
+    }
+
+    /* ── Category Filter ───────────────────────────────────── */
+    .category-filter {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 24px 20px 0;
+    }
+    .cat-btn {
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--grey-md);
+      background: var(--white);
+      color: var(--grey-dk);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .cat-btn.active { background: var(--blue); color: var(--white); border-color: var(--blue); }
+
+    /* ── Stats bar ─────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--white);
+      border-bottom: 2px solid var(--grey-bg);
+      padding: 14px 20px;
+    }
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .results-count { font-size: 13px; color: var(--grey-dk); }
+    .results-count strong { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        Markitt<span>PH</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar-links" id="navLinks">
+        <li><a href="index.html" class="active"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="register.html"><i class="fa fa-plus-circle"></i> List Your Biz</a></li>
+        <li><a href="admin.html"><i class="fa fa-shield-alt"></i> Admin</a></li>
+        <li><a href="register.html" class="btn btn-primary btn-sm">
+          <i class="fa fa-store"></i> Add Business
+        </a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Make Your Business<br/><span>Shine for PH</span></h1>
+      <p>Discover local businesses in Port Harcourt — from salons to food spots, artisans to service providers. All in one place.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-primary btn-lg">
+          <i class="fa fa-store"></i> Put Your Biz on the Map!
+        </a>
+        <a href="#businesses" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.5)">
+          <i class="fa fa-search"></i> Browse Businesses
+        </a>
+      </div>
+      <!-- Search -->
+      <div class="search-bar-wrap">
+        <i class="fa fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search businesses, categories..." autocomplete="off" />
+        <button class="search-clear" id="searchClear"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Category Filter ────────────────────────────────────── -->
+  <div class="category-filter" id="categoryFilter">
+    <button class="cat-btn active" data-cat="all">All</button>
+    <button class="cat-btn" data-cat="Food & Drinks"><i class="fa fa-utensils"></i> Food & Drinks</button>
+    <button class="cat-btn" data-cat="Fashion & Clothing"><i class="fa fa-tshirt"></i> Fashion</button>
+    <button class="cat-btn" data-cat="Beauty & Salon"><i class="fa fa-spa"></i> Beauty</button>
+    <button class="cat-btn" data-cat="Electronics & Tech"><i class="fa fa-laptop"></i> Electronics</button>
+    <button class="cat-btn" data-cat="Health & Pharmacy"><i class="fa fa-pills"></i> Health</button>
+    <button class="cat-btn" data-cat="Automobile & Repairs"><i class="fa fa-car"></i> Auto</button>
+    <button class="cat-btn" data-cat="Education & Training"><i class="fa fa-graduation-cap"></i> Education</button>
+    <button class="cat-btn" data-cat="Home & Furniture"><i class="fa fa-couch"></i> Home</button>
+    <button class="cat-btn" data-cat="Other"><i class="fa fa-store"></i> Other</button>
+  </div>
+
+  <!-- ── Stats bar ──────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <span class="results-count"><strong id="bizCount">0</strong> businesses found</span>
+      <span style="font-size:13px;color:var(--grey-dk)">
+        <i class="fa fa-map-marker-alt" style="color:var(--orange)"></i> Port Harcourt, Rivers State
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Business Grid ──────────────────────────────────────── -->
+  <section class="section" id="businesses">
+    <div class="container">
+      <div class="biz-grid" id="bizGrid">
+        <!-- Cards injected by search.js -->
+      </div>
+      <div class="empty-state hidden" id="emptyState">
+        <div class="empty-icon">🏪</div>
+        <h3>No businesses found</h3>
+        <p id="emptyMsg">No businesses have been listed yet — be the first!</p>
+        <a href="register.html" class="btn btn-primary">Put Your Biz on the Map!</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Site Footer ────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>© 2025 Markitt PH · Built for Port Harcourt Small Businesses · 
+      <a href="register.html">List Your Business</a>
+    </p>
+  </footer>
+
+  <!-- ── Toast ──────────────────────────────────────────────── -->
+  <div id="toast"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/search.js"></script>
+  <script>
+    // Navbar hamburger
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+/* ============================================================
+   MARKITT PH — Template A: Clean Minimal
+   Applied to profile.html when templateChoice === 'A'
+   ============================================================ */
+
+.profile-hero {
+  background: var(--white);
+  padding: 48px 20px 32px;
+  text-align: center;
+  border-bottom: 4px solid var(--orange);
+}
+.profile-hero .biz-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--grey-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 16px;
+  overflow: hidden;
+  border: 4px solid var(--white);
+  box-shadow: 0 2px 12px rgba(26,60,110,0.15);
+}
+.profile-hero .biz-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); color: var(--blue); margin-bottom: 8px; }
+.profile-hero .hero-underline {
+  width: 56px; height: 4px;
+  background: var(--orange);
+  border-radius: 4px;
+  margin: 8px auto 16px;
+}
+.profile-hero .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.profile-hero .hero-meta {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--grey-dk);
+  margin-top: 12px;
+}
+.profile-hero .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+/* Tabs on clean template */
+.profile-tabs { background: var(--white); border-bottom: 2px solid var(--grey-md); }
+.profile-tabs .container { padding-top: 0; padding-bottom: 0; }
+
+/* Content area */
+.profile-content { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+.profile-section-title {
+  font-size: 1.1rem;
+  color: var(--blue);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.profile-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--grey-md);
+}
+
+/* About box */
+.about-box {
+  background: var(--grey-bg);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--blue);
+}
+.about-box p { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+/* Info list */
+.info-list { list-style: none; }
+.info-list li {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey-bg);
+  font-size: 14px;
+  align-items: flex-start;
+}
+.info-list li:last-child { border-bottom: none; }
+.info-list .info-icon { color: var(--orange); min-width: 18px; margin-top: 2px; }
+.info-list .info-label { font-weight: 600; color: var(--blue); min-width: 80px; }
