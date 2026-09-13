@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Markitt PH</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .admin-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 60px; }
+    .admin-login-card { max-width: 380px; margin: 80px auto; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; text-align: center; }
+    .biz-row {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .biz-row-info { flex: 1; }
+    .biz-row-info .name { font-weight: 700; color: var(--blue); font-size: 14px; }
+    .biz-row-info .meta { font-size: 12px; color: var(--grey-dk); margin-top: 2px; }
+    .biz-row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Markitt<span>PH</span></a>
+      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+      <ul class="navbar-links" id="navLinks">
+        <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+        <li><button class="btn btn-danger btn-sm" onclick="adminLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Admin Login ─────────────────────────────────────────── -->
+  <div id="adminLoginScreen">
+    <div class="admin-login-card">
+      <div style="font-size:48px;margin-bottom:16px;">🛡️</div>
+      <h2 style="margin-bottom:6px;">Admin Panel</h2>
+      <p style="font-size:13px;color:var(--grey-dk);margin-bottom:24px;">For platform administrators only.</p>
+      <div id="adminLoginAlert"></div>
+      <div class="form-group" style="text-align:left;">
+        <label class="form-label">Admin Password</label>
+        <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password"
+               onkeydown="if(event.key==='Enter') adminLogin()" />
+        <div class="form-error" id="errAdminPass"></div>
+      </div>
+      <button class="btn btn-secondary btn-block" onclick="adminLogin()">
+        <i class="fa fa-shield-alt"></i> Access Admin Panel
+      </button>
+      <p style="margin-top:16px;font-size:12px;color:var(--grey-dk);">Default password: <code>markittadmin2025</code></p>
+    </div>
+  </div>
+
+  <!-- ── Admin Dashboard ────────────────────────────────────── -->
+  <div id="adminDashboard" class="hidden">
+
+    <div class="page-hero" style="padding:28px 20px 22px;background:linear-gradient(135deg,var(--blue),#0D2347);">
+      <h1 style="font-size:1.4rem;color:#fff;"><i class="fa fa-shield-alt"></i> Admin Panel</h1>
+      <p style="color:rgba(255,255,255,0.8);font-size:13px;">Manage all listings and reviews on Markitt PH.</p>
+    </div>
+
+    <div class="admin-wrap">
+
+      <!-- Analytics -->
+      <div class="analytics-grid" style="margin-bottom:28px;">
+        <div class="analytics-card">
+          <div class="metric" id="adminTotalBiz">0</div>
+          <div class="label">Total Businesses</div>
+        </div>
+        <div class="analytics-card" style="border-top-color:var(--green)">
+          <div class="metric" id="adminTotalReviews">0</div>
+          <div class="label">Total Reviews</div>
+        </div>
+        <div class="analytics-card" style="border-top-color:var(--orange)">
+          <div class="metric" id="adminTotalProducts">0</div>
+          <div class="label">Total Products</div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="form-group" style="margin-bottom:20px;">
+        <input type="text" class="form-control" id="adminSearch" placeholder="Search businesses..." oninput="renderAdminBiz()" />
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchAdminTab('businesses', this)">
+          <i class="fa fa-store"></i> Businesses
+        </button>
+        <button class="tab-btn" onclick="switchAdminTab('reviews', this)">
+          <i class="fa fa-star"></i> All Reviews
+        </button>
+      </div>
+
+      <!-- Businesses -->
+      <div class="tab-panel active" id="admin-tab-businesses">
+        <div id="adminBizList"></div>
+        <div class="empty-state hidden" id="adminNoBiz">
+          <div class="empty-icon">🏪</div>
+          <h3>No businesses registered yet.</h3>
+        </div>
+      </div>
+
+      <!-- All Reviews -->
+      <div class="tab-panel" id="admin-tab-reviews">
+        <div id="adminReviewList"></div>
+        <div class="empty-state hidden" id="adminNoReviews">
+          <div class="empty-icon">⭐</div>
+          <h3>No reviews yet.</h3>
+        </div>
+      </div>
+
+    </div><!-- /admin-wrap -->
+  </div><!-- /adminDashboard -->
+
+  <footer class="site-footer">
+    <p>© 2025 Markitt PH · Admin Panel</p>
+  </footer>
+  <div id="toast"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

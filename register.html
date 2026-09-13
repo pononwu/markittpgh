@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Your Business — Markitt PH</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .register-wrap { max-width: 680px; margin: 0 auto; padding: 36px 20px 60px; }
+    .reg-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; }
+
+    /* Template Preview Cards */
+    .template-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .template-opt {
+      border: 2px solid var(--grey-md);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .template-opt:hover { border-color: var(--blue); }
+    .template-opt.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,119,34,0.18); }
+    .template-preview {
+      height: 110px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .preview-a-header { background: var(--white); height: 28px; border-bottom: 3px solid var(--orange); display:flex;align-items:center;padding:0 8px;gap:4px; }
+    .preview-a-header span { display:inline-block; width:8px;height:8px;border-radius:50%;background:var(--grey-md); }
+    .preview-a-body { flex:1; background: var(--grey-bg); padding: 8px; display:flex;gap:6px; }
+    .preview-a-card { background:var(--white); flex:1; border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+
+    .preview-b-header { background: var(--blue); height: 42px; }
+    .preview-b-bar    { background: var(--orange); height: 8px; }
+    .preview-b-body   { flex:1; background: var(--grey-bg); padding:8px; display:flex;gap:6px; }
+    .preview-b-card   { background:var(--white); flex:1; border-radius:4px; border-top:3px solid var(--orange); }
+
+    .template-name { font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; color:var(--blue); }
+    .template-desc { font-size:11px; color:var(--grey-dk); margin-top:3px; }
+    .selected-tick { color:var(--orange); font-size:18px; margin-bottom:6px; display:none; }
+    .template-opt.selected .selected-tick { display:block; }
+
+    /* Image preview */
+    .img-preview-wrap { position:relative; display:inline-block; }
+    .img-preview { width:100px; height:100px; border-radius:var(--radius); object-fit:cover; border:2px solid var(--grey-md); display:none; }
+    .img-preview.show { display:block; }
+    .img-upload-label {
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 10px 18px;
+      border: 2px dashed var(--grey-md);
+      border-radius: var(--radius-sm);
+      cursor:pointer; font-size:13px; color:var(--grey-dk);
+      transition: border-color 0.2s;
+    }
+    .img-upload-label:hover { border-color:var(--blue); color:var(--blue); }
+
+    /* Product row in step 3 */
+    .product-row { background:var(--grey-bg); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; position:relative; }
+    .product-row-remove { position:absolute; top:10px; right:12px; background:none;border:none;color:#C0392B;cursor:pointer;font-size:16px; }
+
+    /* Step nav buttons */
+    .step-nav { display:flex; justify-content:space-between; margin-top:28px; }
+
+    @media(max-width:480px){
+      .template-options { grid-template-columns: 1fr; }
+      .reg-card { padding:20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Markitt<span>PH</span></a>
+      <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+      <ul class="navbar-links" id="navLinks">
+        <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="register.html" class="active"><i class="fa fa-plus-circle"></i> List Your Biz</a></li>
+        <li><a href="admin.html"><i class="fa fa-shield-alt"></i> Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero" style="padding:36px 20px 28px;">
+    <h1 style="font-size:1.6rem;">Register Your Business</h1>
+    <p>Four quick steps and your biz will be live on Markitt PH.</p>
+  </div>
+
+  <div class="register-wrap">
+
+    <!-- Step Progress -->
+    <div class="step-progress" id="stepProgress">
+      <div class="step-item">
+        <div class="step-circle active" id="sc1">1</div>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc2">2</div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc3">3</div>
+      </div>
+      <div class="step-line" id="sl3"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc4">4</div>
+      </div>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <!-- ── STEP 1: Business Details ───────────────────────── -->
+    <div class="reg-card" id="step1">
+      <h2 style="margin-bottom:6px;font-size:1.2rem;">Step 1: Business Details</h2>
+      <p style="font-size:13px;color:var(--grey-dk);margin-bottom:24px;">Tell us about your business.</p>
+
+      <div class="form-group">
+        <label class="form-label">Business Name *</label>
+        <input type="text" class="form-control" id="bizName" placeholder="e.g. Mama Titi's Kitchen" maxlength="80" />
+        <div class="form-error" id="errBizName">Please enter your business name.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-control" id="bizCategory">
+          <option value="">-- Select a category --</option>
+          <option>Food & Drinks</option>
+          <option>Fashion & Clothing</option>
+          <option>Beauty & Salon</option>
+          <option>Electronics & Tech</option>
+          <option>Health & Pharmacy</option>
+          <option>Automobile & Repairs</option>
+          <option>Education & Training</option>
+          <option>Home & Furniture</option>
+          <option>Other</option>
+        </select>
+        <div class="form-error" id="errBizCat">Please select a category.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Business Description *</label>
+        <textarea class="form-control" id="bizDesc" placeholder="Tell customers what you do, what makes you special..." rows="4" maxlength="500"></textarea>
+        <div class="form-hint"><span id="descCount">0</span>/500 characters</div>
+        <div class="form-error" id="errBizDesc">Please write a short description.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number *</label>
+        <input type="tel" class="form-control" id="bizPhone" placeholder="e.g. 08012345678" maxlength="14" />
+        <div class="form-error" id="errBizPhone">Please enter a valid phone number.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Address</label>
+        <input type="text" class="form-control" id="bizAddress" placeholder="e.g. 12 Rumuola Road, Port Harcourt" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Opening Hours</label>
+        <input type="text" class="form-control" id="bizHours" placeholder="e.g. Mon–Sat: 8am–7pm, Sun: Closed" />
+      </div>
+
+      <hr style="margin:20px 0;border:none;border-top:1px solid var(--grey-bg);">
+      <p style="font-size:13px;font-weight:600;color:var(--blue);margin-bottom:14px;"><i class="fa fa-lock" style="color:var(--orange)"></i> Owner Account</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Owner Name *</label>
+          <input type="text" class="form-control" id="ownerName" placeholder="Your full name" />
+          <div class="form-error" id="errOwner">Required.</div>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Password *</label>
+          <input type="password" class="form-control" id="ownerPass" placeholder="Min. 6 characters" />
+          <div class="form-error" id="errPass">Min. 6 characters.</div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <span></span>
+        <button class="btn btn-primary" onclick="goStep(2)">Next Step <i class="fa fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: Choose Your Look ───────────────────────── -->
+    <div class="reg-card hidden" id="step2">
+      <h2 style="margin-bottom:6px;font-size:1.2rem;">Step 2: Choose Your Look</h2>
+      <p style="font-size:13px;color:var(--grey-dk);margin-bottom:24px;">Pick the template that best suits your business.</p>
+
+      <div class="template-options">
+        <div class="template-opt" id="tplA" onclick="selectTemplate('A')">
+          <i class="fa fa-check-circle selected-tick"></i>
+          <div class="template-preview">
+            <div class="preview-a-header">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="preview-a-body">
+              <div class="preview-a-card"></div>
+              <div class="preview-a-card"></div>
+            </div>
+          </div>
+          <div class="template-name">Template A</div>
+          <div class="template-desc">Clean & Minimal — great for salons, boutiques, professional services</div>
+        </div>
+
+        <div class="template-opt" id="tplB" onclick="selectTemplate('B')">
+          <i class="fa fa-check-circle selected-tick"></i>
+          <div class="template-preview">
+            <div class="preview-b-header"></div>
+            <div class="preview-b-bar"></div>
+            <div class="preview-b-body">
+              <div class="preview-b-card"></div>
+              <div class="preview-b-card"></div>
+            </div>
+          </div>
+          <div class="template-name">Template B</div>
+          <div class="template-desc">Bold & Vibrant — great for food vendors, mechanics, market traders</div>
+        </div>
+      </div>
+      <div class="form-error" id="errTemplate" style="margin-top:10px;">Please choose a template.</div>
+
+      <div class="form-group mt-3">
+        <label class="form-label">Business Logo / Photo (optional)</label>
+        <label class="img-upload-label" for="bizLogoInput">
+          <i class="fa fa-image"></i> Choose Image
+        </label>
+        <input type="file" id="bizLogoInput" accept="image/*" style="display:none" />
+        <div style="margin-top:10px;">
+          <img class="img-preview" id="logoPreview" src="" alt="Logo preview" />
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="goStep(1)"><i class="fa fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Next Step <i class="fa fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: Add Your First Product ─────────────────── -->
+    <div class="reg-card hidden" id="step3">
+      <h2 style="margin-bottom:6px;font-size:1.2rem;">Step 3: Add Products / Services</h2>
+      <p style="font-size:13px;color:var(--grey-dk);margin-bottom:24px;">Add at least one product or service. You can add more later from your dashboard.</p>
+
+      <div id="productRows">
+        <!-- Product rows injected here -->
+      </div>
+
+      <button class="btn btn-outline btn-sm mt-2" onclick="addProductRow()">
+        <i class="fa fa-plus"></i> Add Another Product
+      </button>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="goStep(2)"><i class="fa fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" onclick="goStep(4)">Next Step <i class="fa fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: Set Your Location ──────────────────────── -->
+    <div class="reg-card hidden" id="step4">
+      <h2 style="margin-bottom:6px;font-size:1.2rem;">Step 4: Set Your Location</h2>
+      <p style="font-size:13px;color:var(--grey-dk);margin-bottom:24px;">Add your map coordinates so customers can find you. Open Google Maps, right-click your business location, and copy the coordinates.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-group">
+          <label class="form-label">Latitude</label>
+          <input type="number" step="any" class="form-control" id="bizLat" placeholder="e.g. 4.8156" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Longitude</label>
+          <input type="number" step="any" class="form-control" id="bizLng" placeholder="e.g. 7.0498" />
+        </div>
+      </div>
+      <div class="alert alert-info mt-1" style="font-size:13px;">
+        <i class="fa fa-info-circle"></i>
+        Coordinates are optional. If left blank, the map will default to Port Harcourt city centre.
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="goStep(3)"><i class="fa fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary btn-lg" onclick="submitRegistration()">
+          <i class="fa fa-map-marker-alt"></i> Put Your Biz on the Map!
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ─────────────────────────────────────────── -->
+    <div class="reg-card hidden text-center" id="stepSuccess">
+      <div style="font-size:64px;margin-bottom:16px;">🎉</div>
+      <h2 style="color:var(--green);">Your Biz is Live!</h2>
+      <p style="color:var(--grey-dk);margin:10px 0 24px;">Your business has been listed on Markitt PH. Share the link below with your customers.</p>
+      <div style="background:var(--grey-bg);border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <input type="text" id="successLink" class="form-control" readonly style="border:none;background:transparent;font-size:13px;padding:0;" />
+        <button class="btn btn-primary btn-sm" onclick="copySuccessLink()"><i class="fa fa-copy"></i> Copy</button>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a id="viewProfileBtn" href="#" class="btn btn-secondary"><i class="fa fa-eye"></i> See Profile</a>
+        <a id="dashboardBtn" href="#" class="btn btn-green"><i class="fa fa-tachometer-alt"></i> Go to Dashboard</a>
+        <a href="index.html" class="btn btn-outline"><i class="fa fa-home"></i> Home</a>
+      </div>
+    </div>
+
+  </div><!-- /register-wrap -->
+
+  <footer class="site-footer">
+    <p>© 2025 Markitt PH · Port Harcourt, Nigeria</p>
+  </footer>
+  <div id="toast"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/register.js"></script>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+    // Description character count
+    document.getElementById('bizDesc').addEventListener('input', function(){
+      document.getElementById('descCount').textContent = this.value.length;
+    });
+  </script>
+</body>
+</html>
